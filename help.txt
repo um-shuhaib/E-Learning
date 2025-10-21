@@ -1,0 +1,12 @@
+instructor
+user--role-student,instructoe
+register - role=instru
+
+intructorProfile-user,pic,descrip,expertise
+
+model - category=frondend,backend,full stack...,
+    course=pyhon,MERN,modules=python 
+    cores,fundamental,
+    lessons=datatypes,
+
+student
