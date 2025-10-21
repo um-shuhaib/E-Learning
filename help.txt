@@ -10,3 +10,6 @@ model - category=frondend,backend,full stack...,
     lessons=datatypes,
 
 student
+
+
+widget-tweaks -refer for styloing
