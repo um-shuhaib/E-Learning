@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser   #add in settings- AUTH_USER_MODEL=" " also reg in admin
 from django.db.models import signals
+from embed_video.fields import EmbedVideoField
 
 # Create your models here.
 class User(AbstractUser):
@@ -25,3 +26,30 @@ def create_profile(sender,instance,created,**kwargs):
 
 signals.post_save.connect(create_profile,User)
 
+
+class Category(models.Model):
+    Category_name=models.CharField(max_length=200,unique=True)
+
+    def __str__(self):
+        return self.Category_name
+    
+class Course(models.Model):
+    owner=models.ForeignKey(User,on_delete=models.SET_NULL,null=True,related_name="owner")
+    category=models.ManyToManyField(Category,related_name="category")
+    title=models.CharField(max_length=200)
+    description=models.TextField()
+    image=models.ImageField(upload_to="course_image",null=True,blank=True,default="course_image/default.jpg")
+    price=models.DecimalField(max_digits=8,decimal_places=2)
+    thumbnail=EmbedVideoField()
+    created_date=models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Module(models.Model):
+    course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="module")
+    title=models.CharField(max_length=100)
+    order=models.IntegerField()
+
+    def __str__(self):
+        return f'{self.course.title}-{self.title}'

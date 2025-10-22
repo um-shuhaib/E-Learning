@@ -13,3 +13,13 @@ student
 
 
 widget-tweaks -refer for styloing
+
+
+
+
+
+<-- for adding video-link-thumbnails -->
+
+pip install django-embed-video
+add 'embed_video' to installed apps
+from embed_video.fields import EmbedVideoField
