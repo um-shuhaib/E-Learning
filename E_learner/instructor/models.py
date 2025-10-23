@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser   #add in settings- AUTH_USER_MODEL=" " also reg in admin
 from django.db.models import signals
 from embed_video.fields import EmbedVideoField
+from django.db.models import Max
 
 # Create your models here.
 class User(AbstractUser):
@@ -53,3 +54,22 @@ class Module(models.Model):
 
     def __str__(self):
         return f'{self.course.title}-{self.title}'
+    
+    def save(self, *args, **kwargs):
+        max_order = Module.objects.filter(course=self.course).aggregate(max=Max("order")).get("max") or 0
+        self.order = max_order + 1
+        return super().save(*args, **kwargs)
+    
+class Lesson(models.Model):
+    module_instance=models.ForeignKey(Module,on_delete=models.CASCADE,related_name="lesson")
+    title=models.CharField(max_length=200)
+    video=EmbedVideoField()
+    order=models.IntegerField()
+
+    def __str__(self):
+        return f'{self.module_instance}-{self.title}'
+
+    def save(self, *args, **kwargs):
+        max_order=Lesson.objects.filter(module_instance=self.module_instance).aggregate(max=Max("order")).get("max") or 0
+        self.order=max_order + 1
+        return super().save(*args, **kwargs)
