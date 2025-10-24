@@ -8,3 +8,9 @@ class StudentView(View):
         
         course = Course.objects.all()
         return render(request,"student_home.html",{"course":course})
+
+
+class CourseView(View):
+    def get(self,request,**kwargs):
+        course=Course.objects.get(id=kwargs.get("id"))
+        return render(request,'course_details.html',{"course":course})
