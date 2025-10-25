@@ -1,3 +1,5 @@
+{% load embed_video_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,13 +48,30 @@
     <!-- Course Content -->
     <div class="pt-20">
         <!-- Video Preview Section -->
+         {% video course.thumbnail as thumbnail %}
         <div class="bg-gray-900 w-full">
             <div class="max-w-screen-xl mx-auto px-4 py-8">
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{course.image.url}}" alt="Course Preview" class="w-full max-h-[600px] object-cover">
+                    {% video thumbnail 'huge' %}
                 </div>
             </div>
         </div>
+        {% endvideo %}
+
+        {% video course.thumbnail query="rel=0&wmode=transparent" is_secure=True as my_video %}
+    <div class="bg-gray-900 w-full">
+        <div class="max-w-screen-xl mx-auto px-4 py-8">
+            <div class="aspect-w-16 aspect-h-9">
+                <iframe
+                    src="{{ my_video.url }}"
+                    class="w-full h-full"
+                    frameborder="0"
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
+    </div>
+{% endvideo %}
 
         <!-- Course Info and Modules -->
         <div class="max-w-screen-xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -1,8 +1,15 @@
 from django.shortcuts import render,redirect
 from django.views import View
 from instructor.models import Course
+from instructor.forms import InstructorCreateForm
 
 # Create your views here.
+class StudentRegister(View):
+    def get(self,request):
+        form=InstructorCreateForm()
+        return render(request,'student_register.html',{"form":form})
+
+
 class StudentView(View):
     def get(self,request):
         
