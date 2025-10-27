@@ -26,6 +26,8 @@ urlpatterns = [
     path("instructor/register",views.InstructorCreateView.as_view(),name="register"),
     path("student/home",studView.StudentView.as_view(),name="stud_home"),
     path("student/details/<int:id>",studView.CourseView.as_view(),name="course_detail"),
-    path("student/register",studView.StudentRegister.as_view(),name="student_register"),
+    path("student/register",studView.StudentRegisterView.as_view(),name="student_register"),
+    path("student/login",studView.StudentLoginView.as_view(),name="student_login"),
+    path("student/addtocart/<int:id>",studView.AddToCartView.as_view(),name="add_to_cart"),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
