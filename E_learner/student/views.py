@@ -6,8 +6,8 @@ from instructor.forms import InstructorCreateForm
 from instructor.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-
+from student.authentication import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 class StudentRegisterView(View):
@@ -63,6 +63,8 @@ class CourseView(View):
         course=Course.objects.get(id=kwargs.get("id"))
         return render(request,'course_details.html',{"course":course})
     
+
+@method_decorator(login_required,name="dispatch")
 class AddToCartView(View):
     def get(self,request,**kwargs):
         course_instance=Course.objects.get(id=kwargs.get("id"))
@@ -71,4 +73,7 @@ class AddToCartView(View):
         print(res_instance,created) #course_name True  
         return redirect("stud_home")
         
- 
+class LogoutView(View):
+    def get(self,request):
+        logout(request)
+        return redirect("student_login")
