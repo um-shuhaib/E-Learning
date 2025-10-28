@@ -77,3 +77,18 @@ class LogoutView(View):
     def get(self,request):
         logout(request)
         return redirect("student_login")
+
+@method_decorator(login_required,name="dispatch")
+class CartSummaryView(View):
+    def get(self,request):
+        cart_list=Cart.objects.filter(user_instance=request.user)
+        # sum=0 
+        # for item in cart_list:
+        #     sum+=int(item.course_instance.price)
+        summ=sum([cart.course_instance.price for cart in cart_list]) # sum is decimel.decimel now
+        print(type(summ))
+        tax=(0.1*float(summ)) # tax is float now
+        print(type(tax))
+        total=tax+float(summ)
+        print(total)
+        return render(request,"cart_summary.html",{"cart_list":cart_list,"sum":summ,"tax":tax,"total":total})
