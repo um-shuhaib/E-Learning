@@ -86,9 +86,17 @@ class CartSummaryView(View):
         # for item in cart_list:
         #     sum+=int(item.course_instance.price)
         summ=sum([cart.course_instance.price for cart in cart_list]) # sum is decimel.decimel now
-        print(type(summ))
+        print(type(summ)) #decimal.decimal
         tax=(0.1*float(summ)) # tax is float now
-        print(type(tax))
+        print(type(tax)) #float
         total=tax+float(summ)
-        print(total)
+        print(total) #81400
         return render(request,"cart_summary.html",{"cart_list":cart_list,"sum":summ,"tax":tax,"total":total})
+    
+
+class DeleteCartView(View):
+    def get(self,request,**kwargs):
+        cart_instance=Cart.objects.get(id=kwargs.get("id"))
+        cart_instance.delete()
+        messages.warning(request,"cart iem deleted")
+        return redirect("cart_summary")
