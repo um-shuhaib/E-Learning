@@ -8,6 +8,11 @@ admin.site.register(Category)
 class CourseModel(admin.ModelAdmin):
     exclude=["owner"]
 
+    def save_model(self, request, obj, form, change):
+        if not change:    #new add cheyyumbol ---- update cheyyumbol owner maran NOT ozhivakkiya madhi
+            obj.owner=request.user
+        return super().save_model(request, obj, form, change)
+
 admin.site.register(Course,CourseModel)
 
 class ModuleModel(admin.ModelAdmin):
