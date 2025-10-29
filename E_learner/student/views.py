@@ -10,6 +10,10 @@ from student.authentication import login_required
 from django.utils.decorators import method_decorator
 
 # Create your views here.
+
+RZP_KEY_ID = "rzp_test_RZC099NiGth2P7"
+RZP_KEY_SECRET = "X4AgdYcPdpUQ0cbkFjoQyB2m"
+
 class StudentRegisterView(View):
     def get(self,request):
         return render(request,'student_register.html')
