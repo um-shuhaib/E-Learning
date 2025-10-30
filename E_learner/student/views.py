@@ -14,8 +14,8 @@ from django.db.models import Sum
 
 # Create your views here.
 
-RZP_KEY_ID = "rzp_test_RZC099NiGth2P7"
-RZP_KEY_SECRET = "X4AgdYcPdpUQ0cbkFjoQyB2m"
+RZP_KEY_ID = "rzp_test_RZaJ7hYWRLrBRk"
+RZP_KEY_SECRET = "ZjOp8HdjfqMXl2pFkJ3reLmp"
 
 class StudentRegisterView(View):
     def get(self,request):
@@ -113,8 +113,31 @@ class CheckoutView(View):
     def get(self,request,**kwargs):
         cart_list=request.user.user_cart.all()
         total_price=cart_list.aggregate(su=Sum("course_instance__price")).get("su") or 0 #double underscore
+        t = float(total_price)
         order_instance=Order.objects.create(student=request.user,total=total_price)
         if cart_list:
             for cart in cart_list:
                 order_instance.course_instances.add(cart.course_instance)
-        return render(request,"payment.html")
+                cart.delete()
+            # razorpay setup
+            client = razorpay.Client(auth=(RZP_KEY_ID, RZP_KEY_SECRET))
+            DATA = {
+                "amount": t*100,
+                "currency": "INR",
+                "receipt": "receipt#1",
+                "notes": {
+                    "key1": "value3",
+                    "key2": "value2"
+                }
+            }
+            trans_obj=client.order.create(data=DATA)
+
+            print(trans_obj)
+
+            
+            id=trans_obj.get("id")
+            order_instance.rzp_order_id=id
+            order_instance.save()
+            t=t*100
+            
+        return render(request,"payment.html",{"KEY_ID":RZP_KEY_ID,"total":t,"id":id,"user":request.user})

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from instructor.models import User,Category,Course,Module,Lesson,Cart
+from instructor.models import User,Category,Course,Module,Lesson,Cart,Order
 
 # Register your models here.
 admin.site.register(User)
@@ -25,3 +25,4 @@ class LessonModel(admin.ModelAdmin):
 
 admin.site.register(Lesson,LessonModel)
 admin.site.register(Cart)
+admin.site.register(Order)
