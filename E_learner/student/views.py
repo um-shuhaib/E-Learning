@@ -9,7 +9,7 @@ from django.contrib import messages
 from student.authentication import login_required
 from django.utils.decorators import method_decorator
 import razorpay
-from django.db.models import Sum
+from django.db.models import Sum,Count
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -60,10 +60,13 @@ class StudentLoginView(View):
 
 class StudentView(View):
     def get(self,request):
-        
         course = Course.objects.all()
-        purchased_items=Order.objects.filter(student=request.user).values_list("course_instances",flat=True)
-        return render(request,"student_home.html",{"course":course,"purchased_items":purchased_items})
+        if request.user.is_authenticated:
+            purchased_items=Order.objects.filter(student=request.user).values_list("course_instances",flat=True)
+            course_count=Order.objects.filter(student=request.user).aggregate(count=Count("course_instances")).get("count") or 0
+            return render(request,"student_home.html",{"course":course,"purchased_items":purchased_items,"course_count":course_count})
+        else:
+            return render(request,"student_home.html",{"course":course,"course_count":0})
 
 
 class CourseView(View):
@@ -159,3 +162,7 @@ class PaymentConfirmationView(View):
             order_instance.save()
         return redirect("stud_home")
     
+
+class MyCoursesView(View):
+    def get(self,request):
+        return render(request,"mycourses.html")
