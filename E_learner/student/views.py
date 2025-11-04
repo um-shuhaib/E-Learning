@@ -10,7 +10,7 @@ from student.authentication import login_required
 from django.utils.decorators import method_decorator
 import razorpay
 from django.db.models import Sum
-
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -141,3 +141,20 @@ class CheckoutView(View):
             t=t*100
             
         return render(request,"payment.html",{"KEY_ID":RZP_KEY_ID,"total":t,"id":id,"user":request.user})
+
+
+@method_decorator(csrf_exempt,name="dispatch")
+class PaymentConfirmationView(View):
+    def post(self,request):
+        client = razorpay.Client(auth=(RZP_KEY_ID, RZP_KEY_SECRET))
+        res = client.utility.verify_payment_signature(request.POST)
+        print(res)
+        print(request.POST)
+        if res:
+            order_id=request.POST.get("razorpay_order_id")
+            order_instance=Order.objects.get(rzp_order_id=order_id)
+            print(order_instance)
+            order_instance.is_paid=True
+            order_instance.save()
+        return redirect("stud_home")
+    
