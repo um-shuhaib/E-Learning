@@ -165,4 +165,12 @@ class PaymentConfirmationView(View):
 
 class MyCoursesView(View):
     def get(self,request):
-        return render(request,"mycourses.html")
+        orders=Order.objects.filter(student=request.user)
+        return render(request,"mycourses.html",{"orders":orders})
+
+
+class LessonView(View):
+    def get(self,request,**kwargs):
+        course_instance=Course.objects.get(id=kwargs.get("id"))
+        print(request.GET)
+        return render(request,"lesson.html",{"course":course_instance})

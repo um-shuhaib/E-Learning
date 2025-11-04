@@ -156,7 +156,7 @@
                     <div class="flex justify-between items-center">
                         <span class="text-purple-700 font-bold">₹{{course.price}}</span>
                         {% if course.id in purchased_items %}
-                            <a disabled
+                            <a href="{% url 'course_list' %}"
                             class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
                             Enrolled
                         </a>
