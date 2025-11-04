@@ -62,7 +62,8 @@ class StudentView(View):
     def get(self,request):
         
         course = Course.objects.all()
-        return render(request,"student_home.html",{"course":course})
+        purchased_items=Order.objects.filter(student=request.user).values_list("course_instances",flat=True)
+        return render(request,"student_home.html",{"course":course,"purchased_items":purchased_items})
 
 
 class CourseView(View):
