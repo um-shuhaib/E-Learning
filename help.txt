@@ -23,3 +23,11 @@ widget-tweaks -refer for styloing
 pip install django-embed-video
 add 'embed_video' to installed apps
 from embed_video.fields import EmbedVideoField
+
+
+
+generic view 
+
+templateview,listviews,deleteview,updateview etc
+signals
+authentication - demo
